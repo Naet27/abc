@@ -61,7 +61,7 @@ button {
 
 .nolove {
     background: #ccc;
-    position: absolute;
+    
 }
 
 #msg {
@@ -90,19 +90,30 @@ button {
 <script>
 function love() {
     document.getElementById("msg").innerHTML =
-        "เย้!!! <br>เค้าก็รักเธอเหมือนกันนะ<br>รักมากขึ้นทู้กกกกวันน";
+        "เย้!!! <br>เค้าก็รักเธอเหมือนกันนะ<br>รักมากขึ้นทู้กกกกวันน<br>happy 3 M kub";
 }
 
 function run() {
     const btn = document.querySelector('.nolove');
     const box = document.querySelector('.box');
 
-    const boxRect = box.getBoundingClientRect();
-    const maxX = boxRect.width - btn.offsetWidth;
-    const maxY = boxRect.height - btn.offsetHeight;
+    // ทำให้มันหลุดจาก flex ตอนจะหนี
+    btn.style.position = "absolute";
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    const boxRect = box.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+
+    const padding = 10;
+
+    const maxX = boxRect.width - btnRect.width - padding;
+    const maxY = boxRect.height - btnRect.height - padding;
+
+    let x, y;
+
+    do {
+        x = Math.random() * maxX;
+        y = Math.random() * maxY;
+    } while (x < boxRect.width / 2 && y < 80); // กันไม่ให้ทับปุ่มรัก
 
     btn.style.left = x + "px";
     btn.style.top = y + "px";
