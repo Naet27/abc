@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unlock</title>
+<title>Unlock 💕</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -18,17 +18,17 @@ body {
     align-items: center;
 }
 
-/* container */
+/* ---------- LOCK BOX ---------- */
 .lock {
     background: #ffffff;
     width: 320px;
     padding: 28px 24px 32px;
     border-radius: 26px;
     text-align: center;
-    transition: transform 0.2s ease;
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-/* shake animation */
+/* shake */
 .lock.shake {
     animation: shake 0.35s;
 }
@@ -71,19 +71,15 @@ body {
     transition: background 0.15s ease;
 }
 
-.dot.active {
-    background: #1c1c1e;
-}
-
-.dot.error {
-    background: #ff3b30;
-}
+.dot.active { background: #1c1c1e; }
+.dot.error { background: #ff4d6d; }
 
 /* keypad */
 .keypad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
+    justify-items: center;
 }
 
 .keypad button {
@@ -100,19 +96,15 @@ body {
     align-items: center;
     justify-content: center;
 
-    transition: transform 0.1s ease, background 0.1s ease;
+    transition: transform 0.12s ease, background 0.12s ease;
 }
 
 .keypad button:active {
-    transform: scale(0.92);
+    transform: scale(0.9);
     background: #d1d1d6;
 }
 
-
-.clear {
-    font-size: 18px;
-}
-
+.clear { font-size: 18px; }
 .ok {
     font-size: 14px;
     font-weight: 600;
@@ -122,9 +114,39 @@ body {
 #msg {
     margin-top: 14px;
     font-size: 13px;
-    color: #ff3b30;
+    color: #ff4d6d;
     min-height: 18px;
-    transition: opacity 0.2s ease;
+}
+
+/* ---------- LOADING ---------- */
+.loading {
+    position: fixed;
+    inset: 0;
+    background: #f2f2f7;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 10;
+}
+
+.loader {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 4px solid #e5e5ea;
+    border-top-color: #ff4d6d;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading p {
+    font-size: 14px;
+    color: #8e8e93;
 }
 </style>
 </head>
@@ -133,14 +155,13 @@ body {
 
 <div class="lock" id="lock">
     <div class="title">ใส่รหัสผ่าน</div>
-    <div class="subtitle">กรุณากรอกรหัสผ่าน</div>
+    <div class="subtitle">กรุณากรอกรหัสผ่านให้ถูกต้อง</div>
 
     <div class="dots">
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
-        
     </div>
 
     <div class="keypad">
@@ -164,8 +185,14 @@ body {
     <div id="msg"></div>
 </div>
 
+<!-- loading screen -->
+<div class="loading" id="loading">
+    <div class="loader"></div>
+    <p>กำลังพาไปหารัก</p>
+</div>
+
 <script>
-const correctPassword = "2910";
+const correctPassword = "2910"; // 🔒 แก้รหัสตรงนี้
 let input = "";
 
 function add(num) {
@@ -192,13 +219,24 @@ function clearAll() {
 function check() {
     const msg = document.getElementById("msg");
     const lock = document.getElementById("lock");
+    const loading = document.getElementById("loading");
 
     if (input === correctPassword) {
-        window.location.href = "love.html";
-    } else {
-        msg.innerHTML = "เห้ยทำไมใส่รหัสไม่ถูก!!";
-        updateDots("error");
+        lock.style.opacity = "0";
+        lock.style.transform = "scale(0.96)";
 
+        setTimeout(() => {
+            lock.style.display = "none";
+            loading.style.display = "flex";
+        }, 250);
+
+        setTimeout(() => {
+            window.location.href = "love.html";
+        }, 2200);
+
+    } else {
+        msg.innerHTML = "ทำไมเธอจำรหัสผ่านเราไม่ได้ TT";
+        updateDots("error");
         lock.classList.add("shake");
 
         setTimeout(() => {
