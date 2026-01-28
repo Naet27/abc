@@ -3,120 +3,209 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luv u</title>
+<title>Unlock</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    min-height: 100vh;
+    margin: 0;
+    height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f2f2f7;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
-    padding: 20px;
 }
 
-.box {
-    background: white;
-    padding: 25px 20px;
-    border-radius: 20px;
+/* container */
+.lock {
+    background: #ffffff;
+    width: 320px;
+    padding: 28px 24px 32px;
+    border-radius: 26px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    width: 100%;
-    max-width: 360px;
-    position: relative;
+    transition: transform 0.2s ease;
 }
 
-h1 {
-    color: #ff4d6d;
-    font-size: 22px;
-    margin-bottom: 20px;
+/* shake animation */
+.lock.shake {
+    animation: shake 0.35s;
 }
 
-.buttons {
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+}
+
+/* title */
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1c1c1e;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #8e8e93;
+    margin-bottom: 22px;
+}
+
+/* dots */
+.dots {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    position: relative;
+    gap: 10px;
+    margin-bottom: 26px;
 }
 
-button {
-    padding: 12px 20px;
-    font-size: 16px;
-    border-radius: 30px;
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d1d1d6;
+    transition: background 0.15s ease;
+}
+
+.dot.active {
+    background: #1c1c1e;
+}
+
+.dot.error {
+    background: #ff3b30;
+}
+
+/* keypad */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.keypad button {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
     border: none;
+    font-size: 20px;
+    background: #e5e5ea;
+    color: #1c1c1e;
     cursor: pointer;
-    min-width: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: transform 0.1s ease, background 0.1s ease;
 }
 
-.love {
-    background: #ff4d6d;
-    color: white;
+.keypad button:active {
+    transform: scale(0.92);
+    background: #d1d1d6;
 }
 
-.nolove {
-    background: #ccc;
-    
+
+.clear {
+    font-size: 18px;
 }
 
+.ok {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* message */
 #msg {
-    margin-top: 20px;
-    color: #ff4d6d;
-    font-weight: bold;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #ff3b30;
+    min-height: 18px;
+    transition: opacity 0.2s ease;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
-    <h1>เธอรักเค้ามั้ย?</h1>
+<div class="lock" id="lock">
+    <div class="title">ใส่รหัสผ่าน</div>
+    <div class="subtitle">กรุณากรอกรหัสผ่าน</div>
 
-    <div class="buttons">
-        <button class="love" onclick="love()">รัก</button>
-        <button class="nolove"
-            ontouchstart="run()"
-            onmouseover="run()">ไม่รัก</button>
+    <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        
     </div>
 
-    <p id="msg"></p>
+    <div class="keypad">
+        <button onclick="add('1')">1</button>
+        <button onclick="add('2')">2</button>
+        <button onclick="add('3')">3</button>
+
+        <button onclick="add('4')">4</button>
+        <button onclick="add('5')">5</button>
+        <button onclick="add('6')">6</button>
+
+        <button onclick="add('7')">7</button>
+        <button onclick="add('8')">8</button>
+        <button onclick="add('9')">9</button>
+
+        <button class="clear" onclick="clearAll()">⌫</button>
+        <button onclick="add('0')">0</button>
+        <button class="ok" onclick="check()">OK</button>
+    </div>
+
+    <div id="msg"></div>
 </div>
 
 <script>
-function love() {
-    document.getElementById("msg").innerHTML =
-        "เย้!!! <br>เค้าก็รักเธอเหมือนกันนะ<br>รักมากขึ้นทู้กกกกวันน<br>happy 3 M kub";
+const correctPassword = "2910";
+let input = "";
+
+function add(num) {
+    if (input.length >= correctPassword.length) return;
+    input += num;
+    updateDots();
 }
 
-function run() {
-    const btn = document.querySelector('.nolove');
-    const box = document.querySelector('.box');
+function updateDots(type = "normal") {
+    const dots = document.querySelectorAll(".dot");
+    dots.forEach((dot, i) => {
+        dot.className = "dot";
+        if (i < input.length) dot.classList.add("active");
+        if (type === "error") dot.classList.add("error");
+    });
+}
 
-    // ทำให้มันหลุดจาก flex ตอนจะหนี
-    btn.style.position = "absolute";
+function clearAll() {
+    input = "";
+    updateDots();
+    document.getElementById("msg").innerHTML = "";
+}
 
-    const boxRect = box.getBoundingClientRect();
-    const btnRect = btn.getBoundingClientRect();
+function check() {
+    const msg = document.getElementById("msg");
+    const lock = document.getElementById("lock");
 
-    const padding = 10;
+    if (input === correctPassword) {
+        window.location.href = "love.html";
+    } else {
+        msg.innerHTML = "เห้ยทำไมใส่รหัสไม่ถูก!!";
+        updateDots("error");
 
-    const maxX = boxRect.width - btnRect.width - padding;
-    const maxY = boxRect.height - btnRect.height - padding;
+        lock.classList.add("shake");
 
-    let x, y;
-
-    do {
-        x = Math.random() * maxX;
-        y = Math.random() * maxY;
-    } while (x < boxRect.width / 2 && y < 80); // กันไม่ให้ทับปุ่มรัก
-
-    btn.style.left = x + "px";
-    btn.style.top = y + "px";
+        setTimeout(() => {
+            lock.classList.remove("shake");
+            clearAll();
+        }, 700);
+    }
 }
 </script>
 
