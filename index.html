@@ -2,65 +2,108 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Luv u</title>
+
 <style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-    }
-    .box {
-        background: white;
-        padding: 30px;
-        border-radius: 20px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        width: 300px;
-    }
-    h1 {
-        color: #ff4d6d;
-    }
-    button {
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        margin: 10px;
-    }
-    .love {
-        background: #ff4d6d;
-        color: white;
-    }
-    .nolove {
-        background: #ccc;
-        position: absolute;
-    }
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.box {
+    background: white;
+    padding: 25px 20px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 360px;
+    position: relative;
+}
+
+h1 {
+    color: #ff4d6d;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    min-width: 90px;
+}
+
+.love {
+    background: #ff4d6d;
+    color: white;
+}
+
+.nolove {
+    background: #ccc;
+    position: absolute;
+}
+
+#msg {
+    margin-top: 20px;
+    color: #ff4d6d;
+    font-weight: bold;
+}
 </style>
 </head>
+
 <body>
 
 <div class="box">
-    <h1>เธอรักเค้ามั้ย</h1>
-    <button class="love" onclick="love()">รัก</button>
-    <button class="nolove" onmouseover="run()">ไม่รัก</button>
+    <h1>เธอรักเค้ามั้ย?</h1>
+
+    <div class="buttons">
+        <button class="love" onclick="love()">รัก</button>
+        <button class="nolove"
+            ontouchstart="run()"
+            onmouseover="run()">ไม่รัก</button>
+    </div>
+
     <p id="msg"></p>
 </div>
 
 <script>
 function love() {
     document.getElementById("msg").innerHTML =
-        "เย้!!! เค้าก็รักเธอเหมือนกัน<br>รักมากขึ้นทู้กกวัน";
+        "เย้!!! <br>เค้าก็รักเธอเหมือนกันนะ<br>รักมากขึ้นทู้กกกกวันน";
 }
 
 function run() {
     const btn = document.querySelector('.nolove');
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
+    const box = document.querySelector('.box');
+
+    const boxRect = box.getBoundingClientRect();
+    const maxX = boxRect.width - btn.offsetWidth;
+    const maxY = boxRect.height - btn.offsetHeight;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
     btn.style.left = x + "px";
     btn.style.top = y + "px";
 }
